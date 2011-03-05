@@ -20,8 +20,10 @@ As soon as I have something worth showing I will add examples here. Here is a li
 * Interactive runner. (Interactive run menus from the REPL)
 
 On the more wild side of things:
+
 * Ivy based runner (Start the interactive runner stand alone with a classpath defined with ivy)
 * Dynamic reloading of classes for the Ivy runner. The idea is to run sbt with ~compile and have a separate test-shell pick up the changes dynamically for interactive running and inspection)
+
 
 All of this may change without notice as I learn more.
 
@@ -34,9 +36,9 @@ Licence
 
 Contributing
 ------------
-If you feel that you have some contribution that should make it into this project then pleas form my code, make your changes and send me a pull request.
+If you feel that you have some contribution that should make it into this project then please fork my code, make your changes and send me a pull request.
 
-I would of course be thrilled to hear if you use the code and what you think about it. Just remember that I write this stuff on my sparetime and it would look a million times better if I could only find the time to do things properly it would suck less (yeah right :))
+I would of course be thrilled to hear if you use the code and what you think about it. Just remember that I write this stuff on my sparetime. If I could only find the time to do things properly it would suck less (yeah right :))
 
 
 

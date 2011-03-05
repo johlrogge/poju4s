@@ -15,7 +15,7 @@ class PendingSpec extends Pending with TestLog {
     pending("reason") {
       assertThat(true, is(false))
     }
-    messages.headOption map (assertEquals(Warn("pending: reason"), _)) orElse (Some(fail("Nothing was logged")))
+    messages.headOption map (assertEquals(LogPending("reason"), _)) orElse (Some(fail("Nothing was logged")))
   }
 
   @Test(expected = classOf[FixedButPendingException])

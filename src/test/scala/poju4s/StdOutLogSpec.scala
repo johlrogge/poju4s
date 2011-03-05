@@ -23,7 +23,7 @@ class StdOutLogSpec extends StdOutLog {
 
   @Test
   def logsWarningsToStdOut = overrideStdOut { written =>
-    log.warn("a warning")
-    assertEquals("WARN: a warning", written.trim)            
+    log.pending("reason")
+    assertEquals("PENDING: reason", written.trim)            
   }
 }

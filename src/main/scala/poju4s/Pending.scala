@@ -7,7 +7,7 @@ trait Pending {
       spec
       None
     } catch {
-      case e: Throwable => Some("pending: " + reason)
-    }) map (log.warn(_)) orElse(throw new FixedButPendingException(reason))
+      case e: Throwable => Some(reason)
+    }) map (log.pending(_)) orElse(throw new FixedButPendingException(reason))
   }
 }

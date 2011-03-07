@@ -24,7 +24,7 @@ class InteractionSpec extends Pending with StdOutLog {
   }
 
   @Test
-  def runs_all_specs_in_interacive_spec = pending("Pending must be assumptions")(with_example { spec =>
+  def runs_all_specs_in_interacive_spec = with_example { spec =>
     val results = spec.run
     assertEquals(
       r.Success("poju4s.example.ExampleSpec", 'passingSpec) ::
@@ -35,5 +35,5 @@ class InteractionSpec extends Pending with StdOutLog {
       r.Ignored("poju4s.example.ExampleSpec", 'ignoredSpec) ::
       Nil,
       results)
-  })
+  }
 }

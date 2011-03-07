@@ -10,6 +10,13 @@ object MonadicRunner {
   implicit def requestToOption(r: Request) = Some(r)
   implicit def runnerToOption(r: Runner) = Some(r)
   implicit def decriptionToOption(r: Description) = Some(r)
+  def resolveAssumption(af:Failure) = {
+    val TestAndClass(t, g) = af.getDescription.getDisplayName
+    af.getException match {
+      case p:PendingException => r.Pending(g, Symbol(t))
+      case e => r.Ignored(g, Symbol(t))
+    }
+  }
   def resolveFailure(f: Failure) = {
     val TestAndClass(t, g) = f.getDescription.getDisplayName
     f.getException match {
@@ -28,21 +35,23 @@ trait Interaction {
     for (
       (g, t) <- list;
       req <- Request.aClass(this.getClass);
-      filtered <- req.filterWith(Description.createTestDescription(Class.forName(g), t.name))
+      thldr <- Some(Thread.currentThread.getContextClassLoader);
+      filtered <- req.filterWith(Description.createTestDescription(thldr.loadClass(g), t.name))
     ) {
       val juc = new JUnitCore
       juc.addListener(new RunListener() {
         var failed: Option[Failure] = None
+        var aFailed:Option[Failure] = None
+        override def testAssumptionFailure(af:Failure) = {aFailed = Some(af)}
         override def testIgnored(d: Description) = { rs = r.Ignored(g, t) :: rs }
         override def testFailure(f: Failure) = { failed = Some(f) }
         override def testFinished(d: Description) = {
-          val res = failed.map(resolveFailure) getOrElse (r.Success(g, t))
+          val res = failed.map(resolveFailure) orElse aFailed.map(resolveAssumption) getOrElse (r.Success(g, t))
           rs = res :: rs
         }
       })
       val res = juc.run(filtered)
     }
-    rs.reverse.foreach(println)
     rs.reverse
   }
   def list: List[(String, Symbol)] = {

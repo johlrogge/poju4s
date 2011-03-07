@@ -5,17 +5,21 @@ import org.junit.Assert._
 import org.hamcrest.CoreMatchers._
 
 class PendingSpec extends Pending with TestLog {
-  @Test
+  @Test(expected=classOf[PendingException])
   def aPendingFailingTestDoesNotReportFailures = pending("supposed to be pending, not failing")({
     assertThat(true, is(false))
   })
 
-  @Test
+  @Test(expected=classOf[PendingException])
   def aPendingTestLogsThatItIsPending {
-    pending("reason") {
-      assertThat(true, is(false))
+    try {
+      pending("reason") {
+        assertThat(true, is(false))
+      }
     }
-    messages.headOption map (assertEquals(LogPending("reason"), _)) orElse (Some(fail("Nothing was logged")))
+    finally {
+       messages.headOption map (assertEquals(LogPending("reason"), _)) orElse (Some(fail("Nothing was logged")))
+    }
   }
 
   @Test(expected = classOf[FixedButPendingException])

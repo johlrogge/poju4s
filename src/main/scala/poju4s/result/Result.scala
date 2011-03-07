@@ -1,10 +1,10 @@
 package poju4s.result
 
 
-sealed abstract class Result(spec:Symbol)
-case class Success(spec:Symbol) extends Result(spec)
-case class Ignored(spec:Symbol) extends Result(spec)
-case class Pending(spec:Symbol) extends Result(spec)
-case class Fixed(spec:Symbol) extends Result(spec)
-case class Failure(spec:Symbol) extends Result(spec)
-case class Error(spec:Symbol) extends Result(spec)
+sealed abstract class Result(group:String, spec:Symbol)
+case class Success(group:String, spec:Symbol) extends Result(group, spec)
+case class Ignored(group:String, spec:Symbol) extends Result(group, spec)
+case class Pending(group:String, spec:Symbol) extends Result(group, spec)
+case class Fixed(group:String, spec:Symbol) extends Result(group, spec)
+case class Failure(group:String, spec:Symbol) extends Result(group, spec)
+case class Error(group:String, spec:Symbol) extends Result(group, spec)

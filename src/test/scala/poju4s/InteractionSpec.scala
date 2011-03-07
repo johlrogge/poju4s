@@ -2,29 +2,29 @@ package poju4s
 
 import org.junit._
 import org.junit.Assert._
-import poju4s.{result => r}
+import poju4s.{ result => r }
+import poju4s.example._
 
 class InteractionSpec extends Pending with StdOutLog {
-  class ExampleSpec extends Interaction with Pending with TestLog {
-    @Test
-    def passingSpec = ()
-    @Test
-    def failingSpec = fail("supposed to be failing")
-    @Test
-    def errorSpec = error("an error spec")
-    @Test
-    def pendingSpec = pending("supposed to be pending") { fail("ignored failure") }
-    @Test
-    def fixedSpec = pending("supposed to be fixed") {}
-    @Ignore("reason")
-    @Test
-    def ignoredSpec = fail("fails if not ignored")
-  }
-
-  def with_example(body: ExampleSpec => Unit) = body(new ExampleSpec)
+  def with_example(body: Interaction => Unit) = body(new ExampleSpec)
+  def test(s:Symbol) = (Symbol(classOf[ExampleSpec].getName), s)
 
   @Test
-  def runs_all_specs_in_interacive_spec = pending("need to run tests via JUnit")( with_example{ spec =>
+  def lists_all_specs_in_interactive_spec = with_example { spec =>
+    val results = spec.list
+    assertEquals(
+      test('passingSpec) ::
+      test('failingSpec) ::
+      test('errorSpec) ::
+      test('pendingSpec) ::
+      test('fixedSpec) ::
+      test('ignoredSpec) ::
+      Nil,
+      results)
+  }
+
+  @Test
+  def runs_all_specs_in_interacive_spec = pending("need to run tests via JUnit")(with_example { spec =>
     val results = spec.run
     assertEquals(
       r.Success('passingSpec) ::

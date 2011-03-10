@@ -4,6 +4,7 @@ import poju4s.{ result => r }
 import org.junit.runner._
 import org.junit.runner.notification._
 import scala.collection.JavaConversions._
+import java.util.concurrent.Callable
 
 object MonadicRunner {
   val TestAndClass = """([^(]+)\(([^)]+)\)""".r
@@ -30,27 +31,33 @@ object MonadicRunner {
 trait Interaction {
   import MonadicRunner._
 
-  def run(specsToRun:Symbol*): List[r.Result] = {
-    var rs = List[r.Result]()
+  def run(specsToRun:Symbol*): List[Callable[r.Result]] = {
+    var rs = List[Callable[r.Result]]()
     for (
       (g, t) <- specDescriptors(specsToRun.toList);
       req <- Request.aClass(this.getClass);
       thldr <- Some(Thread.currentThread.getContextClassLoader);
       filtered <- req.filterWith(Description.createTestDescription(thldr.loadClass(g), t.name))
     ) {
-      val juc = new JUnitCore
-      juc.addListener(new RunListener() {
-        var failed: Option[Failure] = None
-        var aFailed:Option[Failure] = None
-        override def testAssumptionFailure(af:Failure) = {aFailed = Some(af)}
-        override def testIgnored(d: Description) = { rs = r.Ignored(g, t) :: rs }
-        override def testFailure(f: Failure) = { failed = Some(f) }
-        override def testFinished(d: Description) = {
-          val res = failed.map(resolveFailure) orElse aFailed.map(resolveAssumption) getOrElse (r.Success(g, t))
-          rs = res :: rs
+      val callable = new Callable[r.Result] {
+        def call = {
+          var res:r.Result = null
+          val juc = new JUnitCore
+          juc.addListener(new RunListener() {
+            var failed: Option[Failure] = None
+            var aFailed:Option[Failure] = None
+            override def testAssumptionFailure(af:Failure) = {aFailed = Some(af)}
+            override def testIgnored(d: Description) = { res = r.Ignored(g, t)}
+            override def testFailure(f: Failure) = { failed = Some(f) }
+            override def testFinished(d: Description) = {
+              res = failed.map(resolveFailure) orElse aFailed.map(resolveAssumption) getOrElse (r.Success(g, t))
+            }
+          })
+          juc.run(filtered)
+          res
         }
-      })
-      val res = juc.run(filtered)
+      }
+      rs = callable :: rs
     }
     rs.reverse
   }

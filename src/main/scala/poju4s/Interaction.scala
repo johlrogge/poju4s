@@ -30,10 +30,10 @@ object MonadicRunner {
 trait Interaction {
   import MonadicRunner._
 
-  def run: List[r.Result] = {
+  def run(specsToRun:Symbol*): List[r.Result] = {
     var rs = List[r.Result]()
     for (
-      (g, t) <- list;
+      (g, t) <- specDescriptors(specsToRun.toList);
       req <- Request.aClass(this.getClass);
       thldr <- Some(Thread.currentThread.getContextClassLoader);
       filtered <- req.filterWith(Description.createTestDescription(thldr.loadClass(g), t.name))
@@ -54,6 +54,12 @@ trait Interaction {
     }
     rs.reverse
   }
+  
+  def specDescriptors(specs:List[Symbol]) = specs match {
+    case Nil => list
+    case _ => specs map((getClass.getName, _))
+  }
+
   def list: List[(String, Symbol)] = {
     for (
       req <- Request.aClass(this.getClass).toList;

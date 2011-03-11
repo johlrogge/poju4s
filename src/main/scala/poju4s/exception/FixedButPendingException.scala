@@ -1,4 +1,4 @@
-package poju4s
+package poju4s.exception
 
 import junit.framework.AssertionFailedError
 

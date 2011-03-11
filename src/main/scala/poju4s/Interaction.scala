@@ -5,6 +5,7 @@ import org.junit.runner._
 import org.junit.runner.notification._
 import scala.collection.JavaConversions._
 import java.util.concurrent.Callable
+import exception._
 
 object MonadicRunner {
   val TestAndClass = """([^(]+)\(([^)]+)\)""".r

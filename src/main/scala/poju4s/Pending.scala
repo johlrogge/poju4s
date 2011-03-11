@@ -1,5 +1,5 @@
 package poju4s
-
+import exception._
 trait Pending {
   val log: Log
   def pending(reason: String)(spec: => Unit) {

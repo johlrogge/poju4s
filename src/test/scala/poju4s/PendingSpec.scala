@@ -3,6 +3,7 @@ package poju4s
 import org.junit._
 import org.junit.Assert._
 import org.hamcrest.CoreMatchers._
+import exception._
 
 class PendingSpec extends Pending with TestLog {
   @Test(expected=classOf[PendingException])

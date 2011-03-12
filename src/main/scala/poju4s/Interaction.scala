@@ -32,7 +32,7 @@ object MonadicRunner {
 trait Interaction {
   import MonadicRunner._
 
-  def run(specsToRun: Symbol*): List[Callable[r.Result]] = {
+  def select(specsToRun: Symbol*): List[Callable[r.Result]] = {
     var rs = List[Callable[r.Result]]()
     for (
       (g, t) <- specDescriptors(specsToRun.toList);

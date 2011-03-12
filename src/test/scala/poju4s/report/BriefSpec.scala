@@ -19,38 +19,38 @@ class BriefSpec {
 
   @Test
   def marksSuccessWithDot = withExample { (spec, output) =>
-    Brief(spec.run('passingSpec))
+    Brief(spec.select('passingSpec))
 
     assertEquals(summary(".", 1), output)
   }
 
   @Test
   def markFailureWithF = withExample { (spec, output) =>
-    Brief(spec.run('failingSpec))
+    Brief(spec.select('failingSpec))
     assertEquals(summary("F", 1, failures = 1), output)
   }
 
   @Test
   def markErrorWithE = withExample { (spec, output) =>
-    Brief(spec.run('errorSpec))
+    Brief(spec.select('errorSpec))
     assertEquals(summary("E", 1, errors = 1), output)
   }
 
   @Test
   def markPendingWithP = withExample { (spec, output) =>
-    Brief(spec.run('pendingSpec))
+    Brief(spec.select('pendingSpec))
     assertEquals(summary("P", 1, pending = 1), output)
   }
 
   @Test
   def markIgnoredWithI = withExample { (spec, output) =>
-    Brief(spec.run('ignoredSpec))
+    Brief(spec.select('ignoredSpec))
     assertEquals(summary("I", 1, ignored = 1), output)
   }
 
   @Test
   def markIgnoredFixedWithX = withExample { (spec, output) =>
-    Brief(spec.run('fixedSpec))
+    Brief(spec.select('fixedSpec))
     assertEquals(summary("X", 1, fixed = 1), output)
   }
 
@@ -67,38 +67,38 @@ class BriefSpecWithColor extends Colorable with Color {
 
   @Test
   def marksSuccessWithDot = withExample { (spec, output) =>
-    brief (spec.run('passingSpec))
+    brief(spec.select('passingSpec))
 
     assertEquals(summary(success("."), 1), output)
   }
 
   @Test
   def markFailureWithF = withExample { (spec, output) =>
-    brief(spec.run('failingSpec))
+    brief(spec.select('failingSpec))
     assertEquals(summary(failure("F"), 1, failures = 1), output)
   }
 
   @Test
   def markErrorWithE = withExample { (spec, output) =>
-    brief(spec.run('errorSpec))
+    brief(spec.select('errorSpec))
     assertEquals(summary(error("E"), 1, errors = 1), output)
   }
 
   @Test
   def markPendingWithP = withExample { (spec, output) =>
-    brief(spec.run('pendingSpec))
+    brief(spec.select('pendingSpec))
     assertEquals(summary(pending("P"), 1, pending = 1), output)
   }
 
   @Test
   def markIgnoredWithI = withExample { (spec, output) =>
-    brief(spec.run('ignoredSpec))
+    brief(spec.select('ignoredSpec))
     assertEquals(summary(ignored("I"), 1, ignored = 1), output)
   }
 
   @Test
   def markIgnoredFixedWithX = withExample { (spec, output) =>
-    brief(spec.run('fixedSpec))
+    brief(spec.select('fixedSpec))
     assertEquals(summary(fixed("X"), 1, fixed = 1), output)
   }
 

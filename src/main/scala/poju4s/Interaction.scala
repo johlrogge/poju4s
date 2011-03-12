@@ -66,7 +66,7 @@ trait Interaction {
 
   def specDescriptors(specs: List[Symbol]) = specs match {
     case Nil => list
-    case _ => specs map ((getClass.getName, _))
+    case _ => for((g, t) <- list if specs.contains(t)) yield (g, t)
   }
 
   def list: List[(String, Symbol)] = listForClass(getClass)

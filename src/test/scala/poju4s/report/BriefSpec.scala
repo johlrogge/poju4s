@@ -3,6 +3,7 @@ package poju4s.report
 import org.junit._
 import org.junit.Assert._
 import poju4s._
+import poju4s.result._
 
 object ReportFixture {
   import poju4s.util.StdXUtil.overrideStdOut
@@ -11,6 +12,10 @@ object ReportFixture {
     overrideStdOut { output =>
       body(new ExampleSpec, output)
     }
+  }
+  def summary(output: String, ran: Int, errors: Int = 0, failures: Int = 0, pending: Int = 0, fixed: Int = 0, ignored: Int = 0, succeeded: Int = 0) = {
+    val nl = System.getProperty("line.separator")
+    output + nl
   }
 }
 
@@ -21,7 +26,7 @@ class BriefSpec {
   def marksSuccessWithDot = withExample { (spec, output) =>
     Brief(spec.select('passingSpec))
 
-    assertEquals(summary(".", 1), output)
+    assertEquals(summary(".", 1, succeeded = 1), output)
   }
 
   @Test
@@ -53,12 +58,6 @@ class BriefSpec {
     Brief(spec.select('fixedSpec))
     assertEquals(summary("X", 1, fixed = 1), output)
   }
-
-  def summary(output: String, ran: Int, errors: Int = 0, failures: Int = 0, pending: Int = 0, fixed: Int = 0, ignored: Int = 0) = {
-    val nl = System.getProperty("line.separator")
-    output + nl +
-      "Ran: " + ran + ", Errors: " + errors + ", Failures: " + failures + ", Pending: " + pending + ", Fixed: " + fixed + ", Ignored: " + ignored + nl
-  }
 }
 
 class BriefSpecWithColor extends Colorable with Color {
@@ -69,7 +68,7 @@ class BriefSpecWithColor extends Colorable with Color {
   def marksSuccessWithDot = withExample { (spec, output) =>
     brief(spec.select('passingSpec))
 
-    assertEquals(summary(success("."), 1), output)
+    assertEquals(summary(success("."), 1, succeeded = 1), output)
   }
 
   @Test
@@ -102,9 +101,10 @@ class BriefSpecWithColor extends Colorable with Color {
     assertEquals(summary(fixed("X"), 1, fixed = 1), output)
   }
 
-  def summary(output: String, ran: Int, errors: Int = 0, failures: Int = 0, pending: Int = 0, fixed: Int = 0, ignored: Int = 0) = {
-    val nl = System.getProperty("line.separator")
-    output + nl +
-      "Ran: " + ran + ", Errors: " + errors + ", Failures: " + failures + ", Pending: " + pending + ", Fixed: " + fixed + ", Ignored: " + ignored + nl
+  @Test
+  def returnsBrowsableSummary = withExample { (spec, output) =>
+    val res = brief(spec.select('fixedSpec))
+    assertEquals(Summary(Fixed("poju4s.example.ExampleSpec", 'fixedSpec)::Nil), res)
   }
+
 }

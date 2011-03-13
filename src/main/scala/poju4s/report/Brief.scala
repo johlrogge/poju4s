@@ -7,7 +7,7 @@ object Brief {
   def apply(toRun: List[Callable[Result]]) = new Brief().apply(toRun)
 }
 
-class Brief extends Colorable {
+class Brief extends Styled {
 
   def apply(toRun: List[Callable[Result]]) = {
     def println(str: String) = System.out.println(str);System.out.flush
@@ -15,12 +15,12 @@ class Brief extends Colorable {
 
     val results = toRun.map(x => {
       x.call match {
-        case s: Success => print(success(".")); s
-        case i: Ignored => print(ignored("I")); i
-        case x: Fixed => print(fixed("X")); x
-        case p: Pending => print(pending("P")); p
-        case f: Failure => print(failure("F")); f
-        case e: Error => print(error("E")); e
+        case s: Success => print(style.success(".")); s
+        case i: Ignored => print(style.ignored("I")); i
+        case x: Fixed => print(style.fixed("X")); x
+        case p: Pending => print(style.pending("P")); p
+        case f: Failure => print(style.failure("F")); f
+        case e: Error => print(style.error("E")); e
         case r => print("?"); r
       }
     })

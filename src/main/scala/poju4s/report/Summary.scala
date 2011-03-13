@@ -1,6 +1,8 @@
-package poju4s.result
+package poju4s.report
 
-case class Summary(result:List[Result]) {
+import poju4s.result._
+
+case class Summary(result:List[Result]) extends Styled {
   override def toString = {
     val (tRun, tErr, tFail, tPend, tFixed, tIgn, tSuc) = ((0, 0, 0, 0, 0, 0, 0) /: result)((acc, curr) => {
       curr match {

@@ -1,8 +1,10 @@
-package poju4s.result
+package poju4s.report
 import org.junit._
 import org.junit.Assert._
+import poju4s.result._
+import poju4s.util._
 
-class SummarySpec {
+class SummarySpec extends TextGoodies {
   @Test
   def toStringPrintsSummary {
     val sum = Summary(Success("cl", 't1) ::

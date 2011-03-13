@@ -60,7 +60,7 @@ class BriefSpec {
   }
 }
 
-class BriefSpecWithColor extends Colorable with Color {
+class BriefSpecWithColor extends Styled with Color {
   import ReportFixture._
   def brief = new Brief with Color
 
@@ -68,43 +68,43 @@ class BriefSpecWithColor extends Colorable with Color {
   def marksSuccessWithDot = withExample { (spec, output) =>
     brief(spec.select('passingSpec))
 
-    assertEquals(summary(success("."), 1, succeeded = 1), output)
+    assertEquals(summary(style.success("."), 1, succeeded = 1), output)
   }
 
   @Test
   def markFailureWithF = withExample { (spec, output) =>
     brief(spec.select('failingSpec))
-    assertEquals(summary(failure("F"), 1, failures = 1), output)
+    assertEquals(summary(style.failure("F"), 1, failures = 1), output)
   }
 
   @Test
   def markErrorWithE = withExample { (spec, output) =>
     brief(spec.select('errorSpec))
-    assertEquals(summary(error("E"), 1, errors = 1), output)
+    assertEquals(summary(style.error("E"), 1, errors = 1), output)
   }
 
   @Test
   def markPendingWithP = withExample { (spec, output) =>
     brief(spec.select('pendingSpec))
-    assertEquals(summary(pending("P"), 1, pending = 1), output)
+    assertEquals(summary(style.pending("P"), 1, pending = 1), output)
   }
 
   @Test
   def markIgnoredWithI = withExample { (spec, output) =>
     brief(spec.select('ignoredSpec))
-    assertEquals(summary(ignored("I"), 1, ignored = 1), output)
+    assertEquals(summary(style.ignored("I"), 1, ignored = 1), output)
   }
 
   @Test
   def markIgnoredFixedWithX = withExample { (spec, output) =>
     brief(spec.select('fixedSpec))
-    assertEquals(summary(fixed("X"), 1, fixed = 1), output)
+    assertEquals(summary(style.fixed("X"), 1, fixed = 1), output)
   }
 
   @Test
   def returnsBrowsableSummary = withExample { (spec, output) =>
     val res = brief(spec.select('fixedSpec))
-    assertEquals(Summary(Fixed("poju4s.example.ExampleSpec", 'fixedSpec)::Nil), res)
+    assertEquals(Summary(Fixed("poju4s.example.ExampleSpec", 'fixedSpec) :: Nil), res)
   }
 
 }

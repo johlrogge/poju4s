@@ -25,6 +25,9 @@ class Brief extends Styled {
       }
     })
     println("")
-    Summary(results)
+    val parent = this
+    new Summary(results) {
+      override val style = parent.style
+    }
   }
 }

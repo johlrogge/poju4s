@@ -20,7 +20,7 @@ class ByStatusSummarySpec extends TextGoodies {
 
   @Test
   def groupsTestsByClass = fixture(allStatusesTwoClasses) { (summary, target) =>
-    ByStatusSummary().print(summary)(target)
+    summary >>: ByStatusSummary() >>: target
     val s = summary.style
 
     val expected = s.error("c1")+nl+

@@ -62,7 +62,7 @@ class BriefSpec {
 
 class BriefSpecWithColor extends Styled with Color {
   import ReportFixture._
-  def brief = new Brief with Color
+  val brief = new Brief with Color
 
   @Test
   def marksSuccessWithDot = withExample { (spec, output) =>
@@ -107,4 +107,9 @@ class BriefSpecWithColor extends Styled with Color {
     assertEquals(Summary(Fixed("poju4s.example.ExampleSpec", 'fixedSpec) :: Nil), res)
   }
 
+  @Test
+  def returnedSummaryInheritsStyle = withExample {(spec, output) =>
+    val res = brief(spec.select('fixedSpec))
+    assertSame(brief.style, res.style)
+  }
 }

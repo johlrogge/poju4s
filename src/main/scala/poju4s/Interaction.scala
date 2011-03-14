@@ -32,8 +32,8 @@ object MonadicRunner {
 trait Interaction {
   import MonadicRunner._
 
-  def select(specsToRun: Symbol*): List[Callable[r.Result]] = {
-    var rs = List[Callable[r.Result]]()
+  def select(specsToRun: Symbol*): List[() => r.Result] = {
+    var rs = List[() => r.Result]()
     for (
       (g, t) <- specDescriptors(specsToRun.toList);
       thldr <- Some(Thread.currentThread.getContextClassLoader);
@@ -41,8 +41,7 @@ trait Interaction {
       req <- Request.aClass(clz);
       filtered <- req.filterWith(Description.createTestDescription(clz, t.name))
     ) {
-      val callable = new Callable[r.Result] {
-        def call = {
+      val callable: () => r.Result = () => {
           var res: r.Result = null
           val juc = new JUnitCore
           juc.addListener(new RunListener() {
@@ -57,7 +56,6 @@ trait Interaction {
           })
           juc.run(filtered)
           res
-        }
       }
       rs = callable :: rs
     }

@@ -5,7 +5,7 @@ package object poju4s {
   val brief = new BriefReport with Color
   val out = new report.SystemOutTarget
   val summary = report.ByStatusSummary()
-  implicit def i2res(i:Interaction):List[java.util.concurrent.Callable[poju4s.result.Result]] = {
+  implicit def i2res(i:Interaction):List[() => poju4s.result.Result] = {
     i.select()
   }
 }

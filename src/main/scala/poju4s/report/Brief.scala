@@ -4,17 +4,17 @@ import poju4s.result._
 import java.util.concurrent._
 
 object Brief {
-  def apply(toRun: List[Callable[Result]]) = new Brief().apply(toRun)
+  def apply(toRun: List[() => Result]) = new Brief().apply(toRun)
 }
 
 class Brief extends Styled {
 
-  def apply(toRun: List[Callable[Result]]) = {
+  def apply(toRun: List[() => Result]) = {
     def println(str: String) = System.out.println(str);System.out.flush
     def print(str: String) = System.out.print(str);System.out.flush
 
     val results = toRun.map(x => {
-      x.call match {
+      x() match {
         case s: Success => print(style.success(".")); s
         case i: Ignored => print(style.ignored("I")); i
         case x: Fixed => print(style.fixed("X")); x

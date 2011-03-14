@@ -25,7 +25,7 @@ class InteractionSpec extends Pending with StdOutLog {
 
   @Test
   def runs_all_specs_in_interacive_spec = with_example { spec =>
-    val results = spec.select().map(_.call)
+    val results = spec.select().map(_())
     assertEquals(
       r.Success("poju4s.example.ExampleSpec", 'passingSpec) ::
       r.Failure("poju4s.example.ExampleSpec", 'failingSpec) ::
@@ -39,7 +39,7 @@ class InteractionSpec extends Pending with StdOutLog {
 
   @Test
   def runs_one_selected_spec = with_example { spec =>
-    val results = spec.select('failingSpec).map(_.call)
+    val results = spec.select('failingSpec).map(_())
     assertEquals(
       r.Failure("poju4s.example.ExampleSpec", 'failingSpec)::
       Nil,

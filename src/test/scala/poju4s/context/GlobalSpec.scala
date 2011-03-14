@@ -18,7 +18,7 @@ class GlobalSpec {
 
   @Test
   def canSelectBySpecName {
-    val res = Global.select('allEntriesAreUnique).map(_.call)
+    val res = Global.select('allEntriesAreUnique).map(_())
     assertEquals(List(Success("poju4s.context.GlobalSpec", 'allEntriesAreUnique)), res)
     
   }

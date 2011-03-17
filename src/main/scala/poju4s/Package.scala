@@ -5,6 +5,7 @@ package object poju4s {
   val brief = new BriefReport with Color
   val out = new report.SystemOutTarget
   val summary = report.ByStatusSummary()
+  val verbose = new report.Verbose()
   implicit def i2res(i:Interaction):List[() => poju4s.result.Result] = {
     i.select()
   }

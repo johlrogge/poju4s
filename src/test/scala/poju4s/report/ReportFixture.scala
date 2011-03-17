@@ -5,7 +5,7 @@ import poju4s.Interaction
 
 object ReportFixture {
   val FAILURE_EXCEPTION = new AssertionError("assertion problem")
-  val ERROR_EXCEPTION = new RuntimeException("runtime problem")
+  val ERROR_EXCEPTION = new RuntimeException("runtime problem", new Exception("casue of problem"))
 
   def allStatusesTwoClasses = new Summary(Success("c1", 'success) ::
     Ignored("c1", 'ignored) ::

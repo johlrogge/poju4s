@@ -44,6 +44,11 @@ import ReportFixture._
     assertFalse(target.toString,  target.toString.contains(".junit."))
   }
 
-  
+  @Test
+  def printsAllCauses = fixture(allStatusesTwoClasses) {
+    (summary, target) =>
+    summary >>: new Verbose() >>: target
+    assertTrue(target.toString, target.toString.contains(ERROR_EXCEPTION.getCause.getMessage))
+  }
 
 }

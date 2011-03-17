@@ -4,8 +4,14 @@ package report
 import result._
 
 object Filters {
-  type TraceFilter = (String, Array[StackTraceElement]) => Array[StackTraceElement]
+  type TraceFilter = (String, Array[StackTraceElement]) => (Array[StackTraceElement])
   type TraceElementFilter = Option[StackTraceElement] => Option[StackTraceElement]
+  trait ComposableTraceFilter extends TraceFilter {
+    def compose(other:TraceFilter) = {
+      (group:String, elements:Array[StackTraceElement]) => other(group, apply(group, elements))
+    }
+  }
+
 
   object NoJUnit extends TraceElementFilter {
     def apply(se: Option[StackTraceElement]) = {
@@ -28,23 +34,32 @@ object Filters {
     }
   }
 
-  object WholeTrace extends TraceFilter {
+
+  object WholeTrace extends ComposableTraceFilter {
     def apply(group: String, se: Array[StackTraceElement]) = {
       se
     }
   }
-  object StopAtTestClass extends TraceFilter {
+  object StopAtTestClass extends ComposableTraceFilter {
     def apply(group: String, stack: Array[StackTraceElement]) = {
       val shortened = stack.reverse.dropWhile(!_.getClassName.startsWith(group)).reverse
       if (shortened.isEmpty) stack
       else shortened
     }
   }
+
+  def elements(filter:TraceElementFilter) = new ComposableTraceFilter {
+    def apply(group: String, st: Array[StackTraceElement]) = {
+      for(next <- st;
+          e <- filter(Some(next))) 
+      yield e
+    }
+  }
 }
 
 import Filters._
 
-class Verbose(traceFilter: TraceFilter = StopAtTestClass, traceElementFilter: TraceElementFilter = NoJUnit.compose(NoSBT).compose(NoConsole)) extends ReportElement {
+class Verbose(traceFilter: TraceFilter = StopAtTestClass.compose(elements(NoJUnit.compose(NoSBT).compose(NoConsole)))) extends ReportElement {
   def print(summary: Summary, target: Target) = {
     val s = summary.style
     for (result <- summary) {
@@ -56,10 +71,7 @@ class Verbose(traceFilter: TraceFilter = StopAtTestClass, traceElementFilter: Tr
           def printException(ex: Throwable): Unit = {
             target.println("  - " + s.emphasis(ex.getMessage))
             target.println("     " + s(result)(ex.getClass.getName))
-            for (
-              next <- traceFilter(group, ex.getStackTrace);
-              se <- traceElementFilter(Some(next))
-            ) {
+            for (se <- traceFilter(group, ex.getStackTrace)) {
               target.println("      at " + s.className(se.getClassName()) + "." +
                 s.method(se.getMethodName) + "(" +
                 s.file(se.getFileName) + ":" +

@@ -18,4 +18,8 @@ case class Summary(result:List[Result]) extends Styled {
 
     "Ran: " + tRun + ", Errors: " + tErr + ", Failures: " + tFail + ", Pending: " + tPend +", Fixed: " + tFixed+ ", Ignored: " + tIgn + ", Succeeded: "+ tSuc
   }
+
+  def foreach(fn:Result => Unit) = {
+    result.foreach(fn)
+  }
 }

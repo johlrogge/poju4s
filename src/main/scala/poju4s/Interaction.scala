@@ -23,8 +23,8 @@ object MonadicRunner {
     val TestAndClass(t, g) = f.getDescription.getDisplayName
     f.getException match {
       case f: FixedButPendingException => r.Fixed(g, Symbol(t))
-      case f: AssertionError => r.Failure(g, Symbol(t))
-      case e => r.Error(g, Symbol(t))
+      case f: AssertionError => r.Failure(g, Symbol(t), f)
+      case e => r.Error(g, Symbol(t), e)
     }
   }
 }

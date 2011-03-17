@@ -12,7 +12,8 @@ case class ByStatusSummary() extends ReportElement {
       k <- groupedRes.keys.toList.sortWith((a, b) => a.compare(b) < 0);
       vs <- groupedRes.get(k)
     ) {
-      target.println(highestStyle(vs, s)(k))
+      val hs = highestStyle(vs, s)
+      target.println(hs(k))
       for (r <- vs) {
         target.println("  " + icon(r, summary.style) + " " + r.spec.name)
       }
@@ -33,13 +34,13 @@ case class ByStatusSummary() extends ReportElement {
 
   def highestStyle(results: List[Result], style: Style) = {
     results.sorted(Result.BySeverity.reverse).headOption.map(x => x match {
-      case s: Success => style.success _
-      case i: Ignored => style.ignored _
-      case p: Pending => style.pending _
-      case x: Fixed => style.fixed _
-      case f: Failure => style.failure _
-      case e: Error => style.error _
-      case _ => style.error _
-    }).getOrElse(style.error _)
+      case s: Success => style.success
+      case i: Ignored => style.ignored
+      case p: Pending => style.pending
+      case x: Fixed => style.fixed
+      case f: Failure => style.failure
+      case e: Error => style.error
+      case _ => style.error
+    }).getOrElse(style.error)
   }
 }

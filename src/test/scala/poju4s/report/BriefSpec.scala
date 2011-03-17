@@ -5,22 +5,9 @@ import org.junit.Assert._
 import poju4s._
 import poju4s.result._
 
-object ReportFixture {
-  import poju4s.util.StdXUtil.overrideStdOut
-  def withExample(body: (Interaction, => String) => Unit) = {
-    import poju4s.example.ExampleSpec
-    overrideStdOut { output =>
-      body(new ExampleSpec, output)
-    }
-  }
-  def summary(output: String, ran: Int, errors: Int = 0, failures: Int = 0, pending: Int = 0, fixed: Int = 0, ignored: Int = 0, succeeded: Int = 0) = {
-    val nl = System.getProperty("line.separator")
-    output + nl
-  }
-}
 
 class BriefSpec {
-  import ReportFixture._
+  import poju4s.report.ReportFixture._
 
   @Test
   def marksSuccessWithDot = withExample { (spec, output) =>

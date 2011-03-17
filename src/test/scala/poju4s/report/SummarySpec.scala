@@ -8,8 +8,8 @@ class SummarySpec extends TextGoodies {
   @Test
   def toStringPrintsSummary {
     val sum = Summary(Success("cl", 't1) ::
-      Error("cl", 't2) ::
-      Failure("cl", 't3) ::
+      Error("cl", 't2, new Exception("error")) ::
+      Failure("cl", 't3, new Exception("failure")) ::
       Pending("cl", 't4) ::
       Fixed("cl", 't5) ::
       Ignored("cl", 't6) ::

@@ -34,8 +34,10 @@ object Filters {
     }
   }
   object StopAtTestClass extends TraceFilter {
-    def apply(group: String, se: Array[StackTraceElement]) = {
-      se.reverse.dropWhile(!_.getClassName.startsWith(group)).reverse
+    def apply(group: String, stack: Array[StackTraceElement]) = {
+      val shortened = stack.reverse.dropWhile(!_.getClassName.startsWith(group)).reverse
+      if (shortened.isEmpty) stack
+      else shortened
     }
   }
 }

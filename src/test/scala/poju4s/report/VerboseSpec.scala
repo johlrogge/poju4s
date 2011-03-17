@@ -25,7 +25,7 @@ import ReportFixture._
   @Test
   def printsStackTraceForFailures = fixture(allStatusesTwoClasses) {
     (summary, target) =>
-    summary >>: new Verbose() >>: target
+    summary >>: new Verbose(Filters.WholeTrace) >>: target
     assertTrue(target.toString,  target.toString.contains(ERROR_EXCEPTION.getStackTrace()(0).toString))
   }
 

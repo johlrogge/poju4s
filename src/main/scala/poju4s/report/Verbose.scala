@@ -28,6 +28,11 @@ object Filters {
     }
   }
 
+  object WholeTrace extends TraceFilter {
+    def apply(group: String, se: Array[StackTraceElement]) = {
+      se
+    }
+  }
   object StopAtTestClass extends TraceFilter {
     def apply(group: String, se: Array[StackTraceElement]) = {
       se.reverse.dropWhile(!_.getClassName.startsWith(group)).reverse

@@ -55,11 +55,13 @@ object Filters {
       yield e
     }
   }
+
+  val default = StopAtTestClass.compose(elements(NoJUnit.compose(NoSBT)))
 }
 
 import Filters._
 
-class Verbose(traceFilter: TraceFilter = StopAtTestClass.compose(elements(NoJUnit.compose(NoSBT).compose(NoConsole)))) extends ReportElement {
+class Verbose(traceFilter: TraceFilter = default) extends ReportElement {
   def print(summary: Summary, target: Target) = {
     val s = summary.style
     for (result <- summary) {
